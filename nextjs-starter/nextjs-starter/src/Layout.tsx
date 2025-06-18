@@ -43,7 +43,7 @@ const Layout = ({ layoutData, headLinks }: LayoutProps): JSX.Element => {
         <header>
           <div id="header">{route && <Placeholder name="headless-header" rendering={route} />}</div>
         </header>
-        <p>Local</p>
+        <p>Local Testing</p>
         <main>
           <div id="content">{route && <Placeholder name="headless-main" rendering={route} />}</div>
         </main>
