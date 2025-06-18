@@ -5,6 +5,8 @@ import {
   RichText as JssRichText,
   Field,
   LinkField,
+  useSitecoreContext,
+  LayoutServicePageState,
 } from '@sitecore-jss/sitecore-jss-nextjs';
 
 interface SitecoreImageField {
@@ -32,6 +34,7 @@ type PromoProps = {
   fields: Fields;
 };
 
+// Helper to get image props for next/image from Sitecore image field
 function getImageProps(imageField?: SitecoreImageField) {
   if (!imageField) return null;
 
@@ -57,6 +60,8 @@ const PromoDefaultComponent = (props: PromoProps): JSX.Element => (
 
 export const Default = (props: PromoProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
+  const { sitecoreContext } = useSitecoreContext();
+  const unoptimized = sitecoreContext?.pageState !== LayoutServicePageState.Normal;
 
   if (props.fields) {
     const imageProps = getImageProps(props.fields.PromoIcon);
@@ -64,7 +69,9 @@ export const Default = (props: PromoProps): JSX.Element => {
     return (
       <div className={`component promo ${props?.params?.styles}`} id={id ? id : undefined}>
         <div className="component-content">
-          <div className="field-promoicon">{imageProps && <Image {...imageProps} />}</div>
+          <div className="field-promoicon">
+            {imageProps && <Image {...imageProps} unoptimized={unoptimized} />}
+          </div>
           <div className="promo-text">
             <div>
               <div className="field-promotext">
@@ -85,6 +92,8 @@ export const Default = (props: PromoProps): JSX.Element => {
 
 export const WithText = (props: PromoProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
+  const { sitecoreContext } = useSitecoreContext();
+  const unoptimized = sitecoreContext?.pageState !== LayoutServicePageState.Normal;
 
   if (props.fields) {
     const imageProps = getImageProps(props.fields.PromoIcon);
@@ -92,7 +101,9 @@ export const WithText = (props: PromoProps): JSX.Element => {
     return (
       <div className={`component promo ${props?.params?.styles}`} id={id ? id : undefined}>
         <div className="component-content">
-          <div className="field-promoicon">{imageProps && <Image {...imageProps} />}</div>
+          <div className="field-promoicon">
+            {imageProps && <Image {...imageProps} unoptimized={unoptimized} />}
+          </div>
           <div className="promo-text">
             <div>
               <div className="field-promotext">
