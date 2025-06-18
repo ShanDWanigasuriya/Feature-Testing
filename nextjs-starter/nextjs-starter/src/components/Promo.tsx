@@ -59,35 +59,29 @@ const PromoDefaultComponent = (props: PromoProps): JSX.Element => (
 );
 
 export const Default = (props: PromoProps): JSX.Element => {
-  const id = props.params.RenderingIdentifier;
   const { sitecoreContext } = useSitecoreContext();
-  const unoptimized = sitecoreContext?.pageState !== LayoutServicePageState.Normal;
+  const unoptimized = sitecoreContext.pageState !== LayoutServicePageState.Normal;
 
-  if (props.fields) {
-    const imageProps = getImageProps(props.fields.PromoIcon);
+  const id = props.params.RenderingIdentifier;
+  const imageProps = getImageProps(props.fields.PromoIcon);
 
-    return (
-      <div className={`component promo ${props?.params?.styles}`} id={id ? id : undefined}>
-        <div className="component-content">
-          <div className="field-promoicon">
-            {imageProps && <Image {...imageProps} unoptimized={unoptimized} />}
+  return (
+    <div className={`component promo ${props?.params?.styles}`} id={id ?? undefined}>
+      <div className="component-content">
+        <div className="field-promoicon">
+          {imageProps && <Image {...imageProps} unoptimized={unoptimized} />}
+        </div>
+        <div className="promo-text">
+          <div className="field-promotext">
+            <JssRichText field={props.fields.PromoText} />
           </div>
-          <div className="promo-text">
-            <div>
-              <div className="field-promotext">
-                <JssRichText field={props.fields.PromoText} />
-              </div>
-            </div>
-            <div className="field-promolink">
-              <JssLink field={props.fields.PromoLink} />
-            </div>
+          <div className="field-promolink">
+            <JssLink field={props.fields.PromoLink} />
           </div>
         </div>
       </div>
-    );
-  }
-
-  return <PromoDefaultComponent {...props} />;
+    </div>
+  );
 };
 
 export const WithText = (props: PromoProps): JSX.Element => {
