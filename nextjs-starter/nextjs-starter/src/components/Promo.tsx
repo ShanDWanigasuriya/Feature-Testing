@@ -32,7 +32,6 @@ type PromoProps = {
   fields: Fields;
 };
 
-// Helper to get image props for next/image from Sitecore image field
 function getImageProps(imageField?: SitecoreImageField) {
   if (!imageField) return null;
 
@@ -49,7 +48,7 @@ function getImageProps(imageField?: SitecoreImageField) {
 }
 
 const PromoDefaultComponent = (props: PromoProps): JSX.Element => (
-  <div className={`component promo ${props?.params?.styles || ''}`}>
+  <div className={`component promo ${props?.params?.styles}`}>
     <div className="component-content">
       <span className="is-empty-hint">Promo</span>
     </div>
@@ -57,26 +56,51 @@ const PromoDefaultComponent = (props: PromoProps): JSX.Element => (
 );
 
 export const Default = (props: PromoProps): JSX.Element => {
-  const id = props.params?.RenderingIdentifier;
+  const id = props.params.RenderingIdentifier;
 
   if (props.fields) {
     const imageProps = getImageProps(props.fields.PromoIcon);
 
     return (
-      <div
-        className={`component promo ${props?.params?.styles || ''}`}
-        id={id ? id : undefined}
-      >
+      <div className={`component promo ${props?.params?.styles}`} id={id ? id : undefined}>
         <div className="component-content">
-          <div className="field-promoicon">
-            {imageProps && <Image {...imageProps} />}
-          </div>
+          <div className="field-promoicon">{imageProps && <Image {...imageProps} />}</div>
           <div className="promo-text">
-            <div className="field-promotext">
-              <JssRichText field={props.fields.PromoText} />
+            <div>
+              <div className="field-promotext">
+                <JssRichText field={props.fields.PromoText} />
+              </div>
             </div>
             <div className="field-promolink">
               <JssLink field={props.fields.PromoLink} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return <PromoDefaultComponent {...props} />;
+};
+
+export const WithText = (props: PromoProps): JSX.Element => {
+  const id = props.params.RenderingIdentifier;
+
+  if (props.fields) {
+    const imageProps = getImageProps(props.fields.PromoIcon);
+
+    return (
+      <div className={`component promo ${props?.params?.styles}`} id={id ? id : undefined}>
+        <div className="component-content">
+          <div className="field-promoicon">{imageProps && <Image {...imageProps} />}</div>
+          <div className="promo-text">
+            <div>
+              <div className="field-promotext">
+                <JssRichText className="promo-text" field={props.fields.PromoText} />
+              </div>
+            </div>
+            <div className="field-promotext">
+              <JssRichText className="promo-text" field={props.fields.PromoText2} />
             </div>
           </div>
         </div>
