@@ -1,29 +1,15 @@
 import React from 'react';
-import Image from 'next/image';
 import {
+  NextImage as JssImage,
   Link as JssLink,
   RichText as JssRichText,
+  ImageField,
   Field,
   LinkField,
-  useSitecoreContext,
-  LayoutServicePageState,
 } from '@sitecore-jss/sitecore-jss-nextjs';
 
-interface SitecoreImageField {
-  src?: string;
-  alt?: string;
-  width?: number;
-  height?: number;
-  value?: {
-    src?: string;
-    alt?: string;
-    width?: number;
-    height?: number;
-  };
-}
-
 interface Fields {
-  PromoIcon: SitecoreImageField;
+  PromoIcon: ImageField;
   PromoText: Field<string>;
   PromoLink: LinkField;
   PromoText2: Field<string>;
@@ -34,22 +20,6 @@ type PromoProps = {
   fields: Fields;
 };
 
-// Helper to get image props for next/image from Sitecore image field
-function getImageProps(imageField?: SitecoreImageField) {
-  if (!imageField) return null;
-
-  const img = imageField.value ?? imageField;
-
-  if (!img?.src) return null;
-
-  return {
-    src: img.src,
-    alt: img.alt || '',
-    width: img.width || 100,
-    height: img.height || 100,
-  };
-}
-
 const PromoDefaultComponent = (props: PromoProps): JSX.Element => (
   <div className={`component promo ${props?.params?.styles}`}>
     <div className="component-content">
@@ -59,44 +29,40 @@ const PromoDefaultComponent = (props: PromoProps): JSX.Element => (
 );
 
 export const Default = (props: PromoProps): JSX.Element => {
-  const { sitecoreContext } = useSitecoreContext();
-  const unoptimized = sitecoreContext.pageState !== LayoutServicePageState.Normal;
-
   const id = props.params.RenderingIdentifier;
-  const imageProps = getImageProps(props.fields.PromoIcon);
-
-  return (
-    <div className={`component promo ${props?.params?.styles}`} id={id ?? undefined}>
-      <div className="component-content">
-        <div className="field-promoicon">
-          {imageProps && <Image {...imageProps} unoptimized={unoptimized} />}
-        </div>
-        <div className="promo-text">
-          <div className="field-promotext">
-            <JssRichText field={props.fields.PromoText} />
-          </div>
-          <div className="field-promolink">
-            <JssLink field={props.fields.PromoLink} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export const WithText = (props: PromoProps): JSX.Element => {
-  const id = props.params.RenderingIdentifier;
-  const { sitecoreContext } = useSitecoreContext();
-  const unoptimized = sitecoreContext?.pageState !== LayoutServicePageState.Normal;
-
   if (props.fields) {
-    const imageProps = getImageProps(props.fields.PromoIcon);
-
     return (
       <div className={`component promo ${props?.params?.styles}`} id={id ? id : undefined}>
         <div className="component-content">
           <div className="field-promoicon">
-            {imageProps && <Image {...imageProps} unoptimized={unoptimized} />}
+            <JssImage field={props.fields.PromoIcon} />
+          </div>
+          <div className="promo-text">
+            <div>
+              <div className="field-promotext">
+                <JssRichText field={props.fields.PromoText} />
+              </div>
+            </div>
+            <div className="field-promolink">
+              <JssLink field={props.fields.PromoLink} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return <PromoDefaultComponent {...props} />;
+};
+
+export const WithText = (props: PromoProps): JSX.Element => {
+  const id = props.params.RenderingIdentifier;
+  if (props.fields) {
+    return (
+      <div className={`component promo ${props?.params?.styles}`} id={id ? id : undefined}>
+        <div className="component-content">
+          <div className="field-promoicon">
+            <JssImage field={props.fields.PromoIcon} />
           </div>
           <div className="promo-text">
             <div>
